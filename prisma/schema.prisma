@@ -1,0 +1,50 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(cuid())
+  email     String    @unique
+  password  String
+  name      String?
+  role      String    @default("STUDENT") // ADMIN, STUDENT
+  createdAt DateTime  @default(now())
+  attempts  Attempt[]
+}
+
+model Exam {
+  id          String     @id @default(cuid())
+  title       String
+  description String?
+  createdAt   DateTime   @default(now())
+  questions   Question[]
+  attempts    Attempt[]
+}
+
+model Question {
+  id             String   @id @default(cuid())
+  examId         String
+  exam           Exam     @relation(fields: [examId], references: [id])
+  questionNumber Int
+  text           String
+  options        String // JSON string: ["Option A", "Option B", ...]
+  correctAnswer  String // "a", "b", "c", or "d" (or full text if needed, sticking to key is safer if mapped)
+  // Actually, keeping options as JSON is flexible.
+}
+
+model Attempt {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  examId    String
+  exam      Exam     @relation(fields: [examId], references: [id])
+  score     Int
+  total     Int
+  answers   String // JSON: { questionId: selectedAnswer }
+  createdAt DateTime @default(now())
+}
