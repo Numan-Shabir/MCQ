@@ -2,7 +2,9 @@
 
 import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { Upload, FileText, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
+import { Upload, FileText, CheckCircle, AlertCircle, Loader2, CloudUpload } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import clsx from 'clsx';
 
 export default function FileUpload({ onUploadComplete }: { onUploadComplete?: () => void }) {
     const router = useRouter();
@@ -82,9 +84,16 @@ export default function FileUpload({ onUploadComplete }: { onUploadComplete?: ()
 
     return (
         <div className="w-full max-w-xl mx-auto space-y-4">
-            <div
-                className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors cursor-pointer ${isDragOver ? 'border-[var(--color-primary)] bg-blue-50' : 'border-gray-300 hover:border-[var(--color-primary)]'
-                    }`}
+            <motion.div
+                whileHover={{ scale: 1.01 }}
+                whileTap={{ scale: 0.99 }}
+                className={clsx(
+                    "relative border-2 border-dashed rounded-xl p-8 text-center transition-all cursor-pointer overflow-hidden",
+                    isDragOver
+                        ? "border-indigo-400 bg-indigo-500/10"
+                        : "border-white/20 hover:border-indigo-400/50 hover:bg-white/5",
+                    file ? "bg-indigo-500/5 border-indigo-500/30" : ""
+                )}
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
@@ -98,42 +107,78 @@ export default function FileUpload({ onUploadComplete }: { onUploadComplete?: ()
                     onChange={handleFileSelect}
                 />
 
-                <div className="flex flex-col items-center gap-3">
-                    <Upload className={`w-12 h-12 ${isDragOver ? 'text-[var(--color-primary)]' : 'text-gray-400'}`} />
-                    <p className="text-lg font-medium text-gray-700">
-                        {file ? file.name : 'Click to upload or drag & drop PDF'}
-                    </p>
-                    <p className="text-sm text-gray-500">Only .pdf files supported</p>
-                </div>
-            </div>
+                <div className="flex flex-col items-center gap-4 relative z-10">
+                    <div className={clsx(
+                        "w-16 h-16 rounded-full flex items-center justify-center transition-colors",
+                        isDragOver ? "bg-indigo-500 text-white" : "bg-white/5 text-indigo-300"
+                    )}>
+                        <CloudUpload className="w-8 h-8" />
+                    </div>
 
-            {file && (
-                <button
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        handleUpload();
-                    }}
-                    disabled={uploading}
-                    className="w-full btn-primary flex items-center justify-center gap-2"
-                >
-                    {uploading ? <Loader2 className="animate-spin" /> : <FileText />}
-                    {uploading ? 'Parsing PDF...' : 'Process Exam File'}
-                </button>
-            )}
-
-            {error && (
-                <div className="flex items-center gap-2 text-red-600 bg-red-50 p-3 rounded">
-                    <AlertCircle className="w-5 h-5" />
-                    <span className="text-sm font-medium">{error}</span>
+                    <div className="space-y-1">
+                        <p className="text-lg font-medium text-white">
+                            {file ? file.name : 'Upload Exam PDF'}
+                        </p>
+                        <p className="text-sm text-slate-400">
+                            {file ? 'Click to change file' : 'Drag & drop or click to browse'}
+                        </p>
+                    </div>
                 </div>
-            )}
 
-            {success && (
-                <div className="flex items-center gap-2 text-green-600 bg-green-50 p-3 rounded">
-                    <CheckCircle className="w-5 h-5" />
-                    <span className="text-sm font-medium">{success}</span>
-                </div>
-            )}
+                {/* Animated Background */}
+                {isDragOver && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="absolute inset-0 bg-indigo-500/10 z-0"
+                    />
+                )}
+            </motion.div>
+
+            <AnimatePresence>
+                {file && (
+                    <motion.button
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            handleUpload();
+                        }}
+                        disabled={uploading}
+                        className="w-full btn-primary flex items-center justify-center gap-2 py-3"
+                    >
+                        {uploading ? <Loader2 className="animate-spin w-5 h-5" /> : <FileText className="w-5 h-5" />}
+                        {uploading ? 'Parsing PDF...' : 'Process Exam File'}
+                    </motion.button>
+                )}
+            </AnimatePresence>
+
+            <AnimatePresence>
+                {error && (
+                    <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="flex items-center gap-2 text-rose-300 bg-rose-500/10 p-4 rounded-xl border border-rose-500/20"
+                    >
+                        <AlertCircle className="w-5 h-5" />
+                        <span className="text-sm font-medium">{error}</span>
+                    </motion.div>
+                )}
+
+                {success && (
+                    <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="flex items-center gap-2 text-emerald-300 bg-emerald-500/10 p-4 rounded-xl border border-emerald-500/20"
+                    >
+                        <CheckCircle className="w-5 h-5" />
+                        <span className="text-sm font-medium">{success}</span>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 }

@@ -1,8 +1,10 @@
 import { PrismaClient } from '@prisma/client';
-import { getSession, logout } from '@/lib/auth'; // Ensure this path is correct if imported in server component context
+import { getSession } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import FileUpload from '@/components/FileUpload';
 import Link from 'next/link';
+import { LogOut, BookOpen, Clock, BarChart, Settings, User, PlusCircle } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const prisma = new PrismaClient();
 
@@ -13,6 +15,22 @@ async function getExams() {
     });
 }
 
+// Client wrapper for logout to handle Framer Motion if needed, but keeping it simple server-side for now
+// We'll use a mix of server and client components pattern if we want full page transitions, 
+// but for the dashboard content, we can just use standard HTML with our CSS classes for now,
+// or we can make this a Client Component if we want heavy interactivity. 
+// Given it's a dashboard, SSR is better for data fetching. 
+// We will add a small client component for the animated list if we really want to, 
+// but for now, let's use the premium CSS classes we added.
+// ACTUALLY: To use framer-motion effectively for entrance animations, this should be a client component 
+// OR we use a client wrapper. Let's use a Client Component wrapper for the list.
+
+// Let's stick to Server Component for data and direct rendering, 
+// and insert some animation classes or a client wrapper.
+// To satisfy the "Next Level" UI request, I'll make the main content area a Client Component.
+
+import DashboardClient from '@/components/DashboardClient';
+
 export default async function DashboardPage() {
     const session = await getSession();
     if (!session) redirect('/login');
@@ -20,47 +38,5 @@ export default async function DashboardPage() {
     const exams = await getExams();
     const isAdmin = session.role === 'ADMIN';
 
-    return (
-        <div className="min-h-screen bg-[var(--color-background)]">
-            <nav className="bg-white shadow p-4 flex justify-between items-center">
-                <h1 className="text-xl font-bold text-[var(--color-primary)]">Dashboard</h1>
-                <div className="flex gap-4 items-center">
-                    <span>Welcome, {session.name as string}</span>
-                    <form action="/api/auth/logout" method="POST">
-                        <button type="submit" className="text-red-600 hover:text-red-800 text-sm">Logout</button>
-                    </form>
-                </div>
-            </nav>
-
-            <main className="max-w-6xl mx-auto p-8 space-y-8">
-
-                {isAdmin && (
-                    <div className="card">
-                        <h2 className="text-xl font-semibold mb-4 text-[var(--color-primary)]">Upload New Exam</h2>
-                        <FileUpload />
-                        {/* Note: In a real app we'd trigger a router.refresh() from client here. passed as prop logic is simplistic here */}
-                    </div>
-                )}
-
-                <div className="space-y-4">
-                    <h2 className="text-2xl font-bold text-[var(--color-text-main)]">Available Exams</h2>
-                    {exams.length === 0 ? (
-                        <p className="text-gray-500">No exams available yet.</p>
-                    ) : (
-                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {exams.map((exam: any) => (
-                                <div key={exam.id} className="card hover:shadow-lg transition-shadow">
-                                    <h3 className="text-lg font-bold mb-2">{exam.title}</h3>
-                                    <p className="text-sm text-[var(--color-text-muted)] mb-4">{exam._count.questions} Questions</p>
-                                    <Link href={`/exam/${exam.id}`} className="btn-secondary inline-block">
-                                        Start Exam
-                                    </Link>
-                                </div>
-                            ))}
-                        </div>
-                    )}
-                </div>
-            </main>
-        </div>
-    );
+    return <DashboardClient session={session} exams={exams} isAdmin={isAdmin} />;
 }

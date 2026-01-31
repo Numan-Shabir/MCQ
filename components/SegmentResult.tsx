@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { CheckCircle, XCircle, ArrowRight, RotateCcw } from 'lucide-react';
+import { CheckCircle, XCircle, ArrowRight, RotateCcw, Award, AlertTriangle } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 interface Question {
@@ -28,28 +28,37 @@ export default function SegmentResult({ questions, answers, onContinue, score, t
     });
 
     return (
-        <div className="min-h-screen bg-[var(--color-background)] p-4 md:p-8 flex items-center justify-center">
+        <div className="min-h-screen bg-[var(--color-background)] p-4 md:p-8 flex items-center justify-center relative overflow-hidden">
+            {/* Background ambiances */}
+            <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-indigo-600/20 rounded-full blur-[120px]" />
+            </div>
+
             <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="max-w-4xl w-full space-y-8"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="max-w-4xl w-full space-y-8 relative z-10"
             >
                 {/* Score Card */}
-                <div className="glass-panel p-8 text-center space-y-6 relative overflow-hidden">
-                    <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)]" />
+                <div className="glass-panel p-8 text-center space-y-6 relative overflow-hidden bg-slate-900/50 border-white/10">
+                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 via-pink-500 to-indigo-500" />
 
-                    <h2 className="text-3xl font-extrabold text-[var(--color-primary)] tracking-tight">Segment Complete</h2>
+                    <div className="w-20 h-20 mx-auto bg-gradient-to-tr from-indigo-500 to-pink-500 rounded-full flex items-center justify-center shadow-lg shadow-indigo-500/30 mb-4">
+                        <Award className="w-10 h-10 text-white" />
+                    </div>
+
+                    <h2 className="text-3xl font-extrabold text-white tracking-tight">Segment Complete</h2>
                     <p className="text-[var(--color-text-muted)]">You've completed this batch of questions. Let's review before moving on.</p>
 
-                    <div className="flex justify-center items-center gap-12 py-6">
+                    <div className="flex justify-center items-center gap-8 md:gap-16 py-6">
                         <div className="text-center">
-                            <span className="block text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Score</span>
-                            <span className="text-5xl font-black text-[var(--color-text-main)]">{score}<span className="text-2xl text-gray-400 font-medium">/{total}</span></span>
+                            <span className="block text-xs font-bold uppercase tracking-widest text-slate-500 mb-1">Score</span>
+                            <span className="text-5xl font-black text-white">{score}<span className="text-2xl text-slate-500 font-medium">/{total}</span></span>
                         </div>
-                        <div className="w-px h-16 bg-gray-200" />
+                        <div className="w-px h-16 bg-white/10" />
                         <div className="text-center">
-                            <span className="block text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Accuracy</span>
-                            <span className={clsx("text-5xl font-black", percentage >= 70 ? "text-emerald-500" : "text-[var(--color-danger)]")}>
+                            <span className="block text-xs font-bold uppercase tracking-widest text-slate-500 mb-1">Accuracy</span>
+                            <span className={clsx("text-5xl font-black", percentage >= 70 ? "text-emerald-400" : "text-rose-400")}>
                                 {percentage}%
                             </span>
                         </div>
@@ -57,7 +66,7 @@ export default function SegmentResult({ questions, answers, onContinue, score, t
 
                     <button
                         onClick={onContinue}
-                        className="btn-primary w-full md:w-auto text-lg px-8 py-3 shadow-lg shadow-blue-900/10 hover:shadow-blue-900/20 transform hover:-translate-y-0.5"
+                        className="btn-primary w-full md:w-auto text-lg px-10 py-4 shadow-xl shadow-indigo-500/20 hover:shadow-indigo-500/30 transform hover:-translate-y-0.5 mx-auto"
                     >
                         Continue to Next Segment <ArrowRight className="w-5 h-5 ml-2" />
                     </button>
@@ -65,9 +74,14 @@ export default function SegmentResult({ questions, answers, onContinue, score, t
 
                 {/* Wrong Answers Review */}
                 {wrongAnswers.length > 0 && (
-                    <div className="space-y-4">
-                        <h3 className="text-xl font-bold text-[var(--color-text-main)] flex items-center gap-2">
-                            <XCircle className="text-[var(--color-danger)]" />
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.2 }}
+                        className="space-y-4"
+                    >
+                        <h3 className="text-xl font-bold text-white flex items-center gap-2 pl-2">
+                            <AlertTriangle className="text-amber-400" />
                             Review Mistakes ({wrongAnswers.length})
                         </h3>
 
@@ -88,43 +102,43 @@ export default function SegmentResult({ questions, answers, onContinue, score, t
                                     <motion.div
                                         initial={{ opacity: 0, x: -10 }}
                                         animate={{ opacity: 1, x: 0 }}
-                                        transition={{ delay: idx * 0.05 }}
+                                        transition={{ delay: idx * 0.05 + 0.3 }}
                                         key={q.id}
-                                        className="card border-l-[6px] border-l-[var(--color-danger)] hover:shadow-md transition-shadow"
+                                        className="glass-panel p-6 border-l-[6px] border-l-rose-500 hover:bg-slate-800/60 transition-colors bg-slate-900/40"
                                     >
-                                        <div className="flex gap-4 mb-3">
-                                            <span className="font-mono text-sm font-bold text-gray-400 mt-1">Q{q.questionNumber}</span>
-                                            <p className="font-medium text-lg text-gray-800">{q.text}</p>
+                                        <div className="flex gap-4 mb-4">
+                                            <span className="font-mono text-sm font-bold text-slate-500 mt-1">Q{q.questionNumber}</span>
+                                            <p className="font-medium text-lg text-slate-200">{q.text}</p>
                                         </div>
 
-                                        <div className="pl-10 space-y-2">
+                                        <div className="pl-0 md:pl-10 space-y-3">
                                             {/* Show Selected (Wrong) */}
                                             {selectedKey && (
-                                                <div className="p-3 bg-red-50 border border-red-100 rounded text-red-700 flex items-center gap-2">
-                                                    <XCircle className="w-4 h-4 shrink-0" />
-                                                    <span className="font-bold w-6 shrink-0">{selectedKey}</span>
-                                                    <span className="truncate">
+                                                <div className="p-3 bg-rose-500/10 border border-rose-500/20 rounded-lg text-rose-300 flex items-center gap-3">
+                                                    <XCircle className="w-5 h-5 shrink-0 text-rose-500" />
+                                                    <span className="font-bold w-6 shrink-0 bg-rose-500/20 text-center rounded">{selectedKey}</span>
+                                                    <span className="truncate flex-1 opacity-90">
                                                         {options.find(o => o.startsWith(selectedKey))?.split(')')[1].replace(/Most Voted/gi, '').replace(/[•.]\s*$/, '').trim() || 'Unknown Option'}
                                                     </span>
-                                                    <span className="ml-auto text-xs font-bold uppercase tracking-wider opacity-70">Your Answer</span>
+                                                    <span className="text-[10px] font-bold uppercase tracking-wider bg-rose-500/20 px-2 py-1 rounded text-rose-200">Your Answer</span>
                                                 </div>
                                             )}
 
                                             {/* Show Correct */}
-                                            <div className="p-3 bg-emerald-50 border border-emerald-100 rounded text-emerald-700 flex items-center gap-2">
-                                                <CheckCircle className="w-4 h-4 shrink-0" />
-                                                <span className="font-bold w-6 shrink-0">{q.correctAnswer}</span>
-                                                <span className="truncate">
+                                            <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-emerald-300 flex items-center gap-3">
+                                                <CheckCircle className="w-5 h-5 shrink-0 text-emerald-500" />
+                                                <span className="font-bold w-6 shrink-0 bg-emerald-500/20 text-center rounded">{q.correctAnswer}</span>
+                                                <span className="truncate flex-1 opacity-90">
                                                     {options.find(o => o.startsWith(q.correctAnswer))?.split(')')[1].replace(/Most Voted/gi, '').replace(/[•.]\s*$/, '').trim() || 'Unknown Option'}
                                                 </span>
-                                                <span className="ml-auto text-xs font-bold uppercase tracking-wider opacity-70">Correct Answer</span>
+                                                <span className="text-[10px] font-bold uppercase tracking-wider bg-emerald-500/20 px-2 py-1 rounded text-emerald-200">Correct Answer</span>
                                             </div>
                                         </div>
                                     </motion.div>
                                 );
                             })}
                         </div>
-                    </div>
+                    </motion.div>
                 )}
             </motion.div>
         </div>

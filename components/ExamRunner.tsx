@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Check, Flag, Clock, ChevronLeft, ChevronRight, Save, Menu, X } from 'lucide-react';
+import { Check, Flag, Clock, ChevronLeft, ChevronRight, Save, Menu, X, AlertOctagon, HelpCircle, ArrowLeft } from 'lucide-react';
 import clsx from 'clsx';
 import { motion, AnimatePresence } from 'framer-motion';
 import SegmentResult from './SegmentResult';
@@ -202,62 +202,61 @@ export default function ExamRunner({ examId, questions, title }: ExamRunnerProps
     // VIEW: Segment Selection
     if (!hasStarted) {
         return (
-            <div className="flex flex-col min-h-screen bg-[var(--color-background)] font-sans text-[var(--color-text-main)] overflow-hidden relative">
+            <div className="flex flex-col min-h-screen bg-[var(--color-background)] font-sans text-white overflow-hidden relative">
 
                 {/* Background Decor */}
                 <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
-                    <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-[var(--color-primary)]/5 rounded-full blur-3xl" />
-                    <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-[var(--color-secondary)]/5 rounded-full blur-3xl" />
+                    <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-indigo-600/20 rounded-full blur-[100px]" />
+                    <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-pink-600/20 rounded-full blur-[100px]" />
                 </div>
 
-                <header className="glass-panel z-20 px-8 py-6 flex justify-between items-center shadow-lg mx-6 mt-6 rounded-2xl">
+                <header className="glass-panel z-20 px-8 py-6 flex justify-between items-center shadow-lg mx-6 mt-6 rounded-2xl border-white/10">
                     <div className="flex items-center gap-4">
                         <button
                             onClick={() => router.push('/dashboard')}
-                            className="p-2 hover:bg-black/5 rounded-lg transition-colors text-[var(--color-primary)]"
+                            className="p-2 hover:bg-white/10 rounded-lg transition-colors text-white"
                             title="Back to Dashboard"
                         >
-                            <ChevronLeft className="w-6 h-6" />
+                            <ArrowLeft className="w-6 h-6" />
                         </button>
-                        <h1 className="text-2xl font-bold text-[var(--color-primary)]">{title}</h1>
+                        <h1 className="text-2xl font-bold text-white tracking-tight">{title}</h1>
                     </div>
-                    <div className="text-sm font-medium text-[var(--color-text-muted)]">
-                        Select a segment to begin
+                    <div className="text-sm font-medium text-[var(--color-text-muted)] w-[400px] text-right">
+                        Select a segment to begin. Your progress is saved per segment.
                     </div>
                 </header>
 
-                <main className="flex-1 overflow-y-auto p-8 z-10">
-                    <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <main className="flex-1 overflow-y-auto p-8 z-10 scrollbar-hide">
+                    <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {Array.from({ length: totalSegments }).map((_, idx) => {
                             const startQ = idx * SEGMENT_SIZE + 1;
                             const endQ = Math.min((idx + 1) * SEGMENT_SIZE, questions.length);
-                            const isCompleted = false; // Todo: Could track completed segments in future
 
                             return (
                                 <motion.div
                                     key={idx}
                                     whileHover={{ y: -5, scale: 1.02 }}
                                     whileTap={{ scale: 0.98 }}
-                                    className="glass-panel p-6 cursor-pointer group hover:bg-white/80 transition-all border border-white/20 hover:border-[var(--color-secondary)]/30"
+                                    className="glass-panel p-6 cursor-pointer group hover:bg-white/5 transition-all border border-white/5 hover:border-indigo-500/50"
                                     onClick={() => handleStartSegment(idx)}
                                 >
                                     <div className="flex justify-between items-start mb-4">
-                                        <div className="w-12 h-12 rounded-xl bg-[var(--color-primary)]/10 flex items-center justify-center text-[var(--color-primary)] group-hover:bg-[var(--color-primary)] group-hover:text-white transition-colors">
+                                        <div className="w-12 h-12 rounded-xl bg-indigo-500/10 flex items-center justify-center text-indigo-400 group-hover:bg-indigo-500 group-hover:text-white transition-colors">
                                             <span className="text-xl font-bold">{idx + 1}</span>
                                         </div>
-                                        <div className="px-3 py-1 rounded-full bg-slate-100 text-slate-500 text-xs font-bold uppercase tracking-wider">
+                                        <div className="px-3 py-1 rounded-full bg-slate-800 text-slate-400 text-xs font-bold uppercase tracking-wider border border-white/5">
                                             50 Questions
                                         </div>
                                     </div>
 
-                                    <h3 className="text-xl font-bold text-[var(--color-text-main)] mb-2">
+                                    <h3 className="text-xl font-bold text-white mb-2">
                                         Segment {idx + 1}
                                     </h3>
                                     <p className="text-[var(--color-text-muted)] text-sm mb-6">
                                         Questions {startQ} - {endQ}
                                     </p>
 
-                                    <div className="flex items-center gap-2 text-sm font-bold text-[var(--color-secondary)] group-hover:translate-x-1 transition-transform">
+                                    <div className="flex items-center gap-2 text-sm font-bold text-indigo-400 group-hover:translate-x-1 transition-transform">
                                         Start Exam <ChevronRight className="w-4 h-4" />
                                     </div>
                                 </motion.div>
@@ -282,22 +281,26 @@ export default function ExamRunner({ examId, questions, title }: ExamRunnerProps
     }
 
     return (
-        <div className="flex flex-col h-screen overflow-hidden bg-[var(--color-background)] font-sans text-[var(--color-text-main)]">
+        <div className="flex flex-col h-screen overflow-hidden bg-[var(--color-background)] font-sans text-white">
             {/* Top Bar */}
-            <header className="glass-panel rounded-none border-x-0 border-t-0 z-20 px-6 py-4 flex justify-between items-center shadow-sm relative">
+            <header className="glass-panel rounded-none border-x-0 border-t-0 z-20 px-6 py-4 flex justify-between items-center shadow-md relative border-b border-white/5 bg-[#0f172a]/80 backdrop-blur-md">
                 <div className="flex items-center gap-4">
-                    <button onClick={() => setSidebarOpen(!sidebarOpen)} className="md:hidden p-2 hover:bg-black/5 rounded-lg">
+                    <button onClick={() => setSidebarOpen(!sidebarOpen)} className="md:hidden p-2 hover:bg-white/10 rounded-lg">
                         {sidebarOpen ? <X /> : <Menu />}
                     </button>
                     <div>
-                        <h1 className="text-lg font-bold text-[var(--color-primary)] truncate max-w-[200px] md:max-w-md">{title}</h1>
-                        <p className="text-xs text-[var(--color-text-muted)] font-medium">Segment {segmentIndex + 1} of {totalSegments}</p>
+                        <h1 className="text-lg font-bold text-white truncate max-w-[200px] md:max-w-md">{title}</h1>
+                        <div className="flex items-center gap-2 text-xs text-[var(--color-text-muted)] font-medium">
+                            <span className="bg-white/5 px-2 py-0.5 rounded">Segment {segmentIndex + 1}</span>
+                            <span>•</span>
+                            <span>Q {currentIdx + 1} of {questions.length}</span>
+                        </div>
                     </div>
                 </div>
 
                 <div className="flex items-center gap-4 md:gap-6">
-                    <div className="flex items-center gap-2 text-lg font-mono bg-white/50 border border-white/20 px-4 py-2 rounded-xl text-[var(--color-primary)] shadow-inner">
-                        <Clock className="w-5 h-5 text-[var(--color-secondary)]" />
+                    <div className="flex items-center gap-2 text-lg font-mono bg-white/5 border border-white/10 px-4 py-2 rounded-xl text-indigo-400 shadow-inner">
+                        <Clock className="w-5 h-5 text-indigo-500" />
                         <span className="font-bold tracking-widest">{formatTime(timeLeft)}</span>
                     </div>
 
@@ -318,17 +321,17 @@ export default function ExamRunner({ examId, questions, title }: ExamRunnerProps
                                 }
                             });
                         }}
-                        className="bg-red-50 text-red-600 px-3 py-2 rounded-lg hover:bg-red-100 transition-all border border-red-200"
+                        className="bg-red-500/10 text-red-500 hover:bg-red-500/20 px-3 py-2 rounded-lg transition-all border border-red-500/20"
                         title="Exit Exam"
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" x2="9" y1="12" y2="12" /></svg>
+                        <LogOutIcon className="w-5 h-5" />
                     </button>
 
                     {/* Only show Finish Exam if on last question of last segment or explicitly needed */}
                     {segmentIndex === totalSegments - 1 && (
                         <button
                             onClick={handleSubmit}
-                            className="bg-emerald-600 text-white px-4 py-2 rounded-lg shadow-lg shadow-emerald-900/20 hover:bg-emerald-700 transition-all text-sm font-bold flex items-center gap-2"
+                            className="bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 px-4 py-2 rounded-lg hover:bg-emerald-600/30 transition-all text-sm font-bold flex items-center gap-2"
                             disabled={submitting}
                         >
                             <Save className="w-4 h-4" />
@@ -341,15 +344,16 @@ export default function ExamRunner({ examId, questions, title }: ExamRunnerProps
             <div className="flex flex-1 overflow-hidden relative">
                 {/* Sidebar Navigation */}
                 <aside className={clsx(
-                    "absolute md:relative z-10 w-72 h-full bg-[var(--glass-bg)] backdrop-blur-xl border-r border-[var(--color-border)] transform transition-transform duration-300 md:translate-x-0 flex flex-col",
+                    "absolute md:relative z-10 w-72 h-full bg-[#1e293b]/90 backdrop-blur-xl border-r border-white/5 transform transition-transform duration-300 md:translate-x-0 flex flex-col shadow-2xl",
                     sidebarOpen ? "translate-x-0" : "-translate-x-full"
                 )}>
-                    <div className="p-4 border-b border-[var(--color-border)]/50">
-                        <h3 className="font-bold text-gray-500 text-xs uppercase tracking-widest">Question Navigator</h3>
-                        <p className="text-xs text-gray-400 mt-1">Segment {segmentIndex + 1}</p>
+                    <div className="p-4 border-b border-white/5">
+                        <h3 className="font-bold text-gray-400 text-xs uppercase tracking-widest flex items-center gap-2">
+                            <AlertOctagon className="w-4 h-4" /> Navigator
+                        </h3>
                     </div>
 
-                    <div className="flex-1 overflow-y-auto p-4">
+                    <div className="flex-1 overflow-y-auto p-4 custom-scrollbar">
                         <div className="grid grid-cols-5 gap-2">
                             {currentSegmentQuestions.map((q, idx) => {
                                 const globalIdx = currentSegmentStart + idx;
@@ -366,15 +370,14 @@ export default function ExamRunner({ examId, questions, title }: ExamRunnerProps
                                         }}
                                         className={clsx(
                                             "aspect-square rounded-lg flex items-center justify-center text-xs font-bold transition-all relative overflow-hidden",
-                                            isActive ? "ring-2 ring-[var(--color-secondary)] ring-offset-2 scale-110 z-10" : "hover:scale-105",
-                                            isActive && !answered && "bg-white text-[var(--color-primary)] border-2 border-[var(--color-secondary)]",
-                                            !isActive && answered ? "bg-[var(--color-secondary)] text-white shadow-sm" :
-                                                !isActive && !answered ? "bg-white text-gray-400 border border-gray-200" : ""
+                                            isActive ? "ring-2 ring-indigo-500 ring-offset-2 ring-offset-slate-900 scale-110 z-10 bg-indigo-600 text-white" : "hover:scale-105",
+                                            !isActive && answered ? "bg-indigo-500/20 text-indigo-300 border border-indigo-500/30" :
+                                                !isActive && !answered ? "bg-slate-800 text-slate-500 border border-white/5" : ""
                                         )}
                                     >
                                         {q.questionNumber}
                                         {markedQ && (
-                                            <div className="absolute top-0 right-0 p-0.5 bg-yellow-400 text-yellow-900 rounded-bl-md">
+                                            <div className="absolute top-0 right-0 p-0.5 bg-yellow-500/20 text-yellow-500 rounded-bl-md">
                                                 <Flag className="w-2 h-2 fill-current" />
                                             </div>
                                         )}
@@ -384,21 +387,24 @@ export default function ExamRunner({ examId, questions, title }: ExamRunnerProps
                         </div>
                     </div>
 
-                    <div className="p-4 bg-white/30 border-t border-[var(--color-border)]/50 text-xs space-y-2">
-                        <div className="flex items-center gap-2"><div className="w-3 h-3 bg-[var(--color-secondary)] rounded-full"></div> Answered</div>
-                        <div className="flex items-center gap-2"><div className="w-3 h-3 bg-yellow-400 rounded-full"></div> Marked</div>
-                        <div className="flex items-center gap-2"><div className="w-3 h-3 bg-white border border-gray-300 rounded-full"></div> Not Visited</div>
+                    <div className="p-4 bg-black/20 border-t border-white/5 text-xs space-y-2">
+                        <div className="flex items-center gap-2"><div className="w-3 h-3 bg-indigo-500/20 border border-indigo-500/30 rounded-full"></div> Answered</div>
+                        <div className="flex items-center gap-2"><div className="w-3 h-3 bg-yellow-500/20 border border-yellow-500/30 rounded-full"></div> Marked</div>
+                        <div className="flex items-center gap-2"><div className="w-3 h-3 bg-slate-800 border border-white/10 rounded-full"></div> Not Visited</div>
                     </div>
                 </aside>
 
                 {/* Main Content */}
-                <main className="flex-1 overflow-y-auto p-4 md:p-8 relative scroll-smooth">
-                    <div className="max-w-4xl mx-auto pb-32">
+                <main className="flex-1 overflow-y-auto p-4 md:p-8 relative scroll-smooth bg-slate-900/50">
+                    {/* Background Glow */}
+                    <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-indigo-600/5 rounded-full blur-[100px] pointer-events-none" />
+
+                    <div className="max-w-4xl mx-auto pb-32 relative z-10">
                         {/* Question Header */}
                         <div className="flex justify-between items-start mb-6">
                             <div>
-                                <span className="text-sm font-bold text-[var(--color-secondary)] uppercase tracking-wider mb-1 block">Question {currentQuestion.questionNumber}</span>
-                                <h2 className="text-xl md:text-2xl font-bold text-[var(--color-primary)]">
+                                <span className="text-sm font-bold text-indigo-400 uppercase tracking-wider mb-1 block">Question {currentQuestion.questionNumber}</span>
+                                <h2 className="text-xl md:text-2xl font-bold text-white">
                                     {/* Could trim text if too long, or just let it wrap */}
                                 </h2>
                             </div>
@@ -407,8 +413,8 @@ export default function ExamRunner({ examId, questions, title }: ExamRunnerProps
                                 className={clsx(
                                     "flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wide transition-all",
                                     marked[currentQuestion.id]
-                                        ? "bg-yellow-100 text-yellow-700 border border-yellow-300 shadow-sm"
-                                        : "bg-white text-gray-500 border border-gray-200 hover:bg-gray-50"
+                                        ? "bg-yellow-500/10 text-yellow-500 border border-yellow-500/30"
+                                        : "bg-white/5 text-slate-400 border border-white/10 hover:bg-white/10"
                                 )}
                             >
                                 <Flag className={clsx("w-4 h-4", marked[currentQuestion.id] && "fill-current")} />
@@ -417,8 +423,8 @@ export default function ExamRunner({ examId, questions, title }: ExamRunnerProps
                         </div>
 
                         {/* Question Card */}
-                        <div className="glass-panel p-6 md:p-10 mb-8 min-h-[160px] flex items-center">
-                            <p className="text-lg md:text-xl leading-relaxed font-medium text-[var(--color-text-main)] whitespace-pre-wrap">
+                        <div className="glass-panel p-6 md:p-10 mb-8 min-h-[160px] flex items-center border-white/10 bg-slate-800/40">
+                            <p className="text-lg md:text-xl leading-relaxed font-medium text-slate-200 whitespace-pre-wrap">
                                 {currentQuestion.text}
                             </p>
                         </div>
@@ -431,28 +437,28 @@ export default function ExamRunner({ examId, questions, title }: ExamRunnerProps
 
                                 return (
                                     <motion.div
-                                        whileHover={{ scale: 1.01 }}
-                                        whileTap={{ scale: 0.99 }}
+                                        whileHover={{ scale: 1.005 }}
+                                        whileTap={{ scale: 0.995 }}
                                         key={opt}
                                         onClick={() => handleSelect(opt)}
                                         className={clsx(
                                             "group p-4 rounded-xl border-2 cursor-pointer transition-all flex items-center gap-4 relative overflow-hidden",
                                             isSelected
-                                                ? "border-[var(--color-secondary)] bg-sky-50 shadow-md"
-                                                : "border-transparent bg-white shadow-sm hover:border-[var(--color-border)] hover:bg-gray-50"
+                                                ? "border-indigo-500 bg-indigo-500/10 shadow-lg shadow-indigo-500/10"
+                                                : "border-transparent bg-white/5 shadow-sm hover:border-white/10 hover:bg-white/10"
                                         )}
                                     >
                                         <div className={clsx(
                                             "w-10 h-10 rounded-lg flex items-center justify-center text-lg font-bold shrink-0 transition-colors",
                                             isSelected
-                                                ? "bg-[var(--color-secondary)] text-white shadow-sm"
-                                                : "bg-slate-100 text-slate-500 group-hover:bg-slate-200"
+                                                ? "bg-indigo-500 text-white shadow-sm"
+                                                : "bg-slate-700 text-slate-400 group-hover:bg-slate-600 group-hover:text-white"
                                         )}>
                                             {key}
                                         </div>
                                         <span className={clsx(
                                             "text-lg",
-                                            isSelected ? "text-[var(--color-primary)] font-semibold" : "text-[var(--color-text-main)]"
+                                            isSelected ? "text-white font-semibold" : "text-slate-300"
                                         )}>
                                             {opt.substring(opt.indexOf(')') + 1).replace(/Most Voted/gi, '').replace(/[•.]\s*$/, '').trim()}
                                         </span>
@@ -464,22 +470,22 @@ export default function ExamRunner({ examId, questions, title }: ExamRunnerProps
                 </main>
 
                 {/* Footer Navigation (Floating) */}
-                <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex items-center gap-4 bg-white/90 backdrop-blur-md px-6 py-3 rounded-2xl shadow-2xl border border-white/50 z-30">
+                <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex items-center gap-4 bg-slate-900/80 backdrop-blur-xl px-6 py-3 rounded-2xl shadow-2xl border border-white/10 z-30">
                     <button
                         onClick={handlePrevious}
                         disabled={currentIdx === currentSegmentStart}
-                        className="w-10 h-10 rounded-full flex items-center justify-center bg-gray-100 text-gray-600 hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                        className="w-10 h-10 rounded-full flex items-center justify-center bg-white/5 text-slate-400 hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                     >
                         <ChevronLeft className="w-5 h-5" />
                     </button>
 
-                    <span className="text-sm font-bold text-gray-500 w-24 text-center">
+                    <span className="text-sm font-bold text-slate-400 w-24 text-center">
                         {currentIdx + 1} / {questions.length}
                     </span>
 
                     <button
                         onClick={handleNext}
-                        className="btn-primary rounded-full px-6 py-2.5 flex items-center gap-2 pl-4"
+                        className="btn-primary rounded-full px-6 py-2.5 flex items-center gap-2 pl-4 shadow-lg shadow-indigo-500/20"
                     >
                         {currentIdx + 1 === currentSegmentEnd ? (segmentIndex === totalSegments - 1 ? 'Finish' : 'Complete Segment') : 'Next'}
                         <ChevronRight className="w-4 h-4" />
@@ -497,4 +503,25 @@ export default function ExamRunner({ examId, questions, title }: ExamRunnerProps
             />
         </div >
     );
+}
+
+function LogOutIcon(props: any) {
+    return (
+        <svg
+            {...props}
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        >
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" x2="9" y1="12" y2="12" />
+        </svg>
+    )
 }
