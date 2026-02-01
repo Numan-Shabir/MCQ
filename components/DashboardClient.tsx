@@ -61,13 +61,13 @@ export default function DashboardClient({ session, exams, isAdmin }: DashboardCl
             {/* Background ambiances */}
             <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-indigo-900/20 to-transparent pointer-events-none" />
 
-            <nav className="glass-panel m-4 px-6 py-4 flex justify-between items-center sticky top-4 z-50">
+            <nav className="glass-panel m-4 px-4 sm:px-6 py-4 flex flex-col sm:flex-row justify-between items-center gap-4 sticky top-4 z-50">
                 <div className="flex items-center gap-2">
                     <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-indigo-500 to-pink-500 flex items-center justify-center">
                         <Atom className="text-white w-5 h-5" />
                     </div>
-                    <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-pink-400">
-                        Antigravity MCQ
+                    <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-pink-400 text-center sm:text-left">
+                        ServiceNow Exams Portal
                     </h1>
                 </div>
                 <div className="flex gap-6 items-center">
@@ -87,7 +87,7 @@ export default function DashboardClient({ session, exams, isAdmin }: DashboardCl
                 </div>
             </nav>
 
-            <main className="max-w-7xl mx-auto p-8 space-y-8 relative z-10">
+            <main className="max-w-7xl mx-auto p-4 md:p-8 space-y-8 relative z-10">
 
                 <header className="mb-12">
                     <motion.h1

@@ -253,7 +253,7 @@ export default function ExamRunner({ examId, questions, title }: ExamRunnerProps
                     <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-pink-600/20 rounded-full blur-[100px]" />
                 </div>
 
-                <header className="glass-panel z-20 px-8 py-6 flex justify-between items-center shadow-lg mx-6 mt-6 rounded-2xl border-white/10">
+                <header className="glass-panel z-20 px-6 py-6 flex flex-col md:flex-row justify-between items-center gap-4 shadow-lg mx-4 md:mx-6 mt-6 rounded-2xl border-white/10">
                     <div className="flex items-center gap-4">
                         <button
                             onClick={() => router.push('/dashboard')}
@@ -264,12 +264,12 @@ export default function ExamRunner({ examId, questions, title }: ExamRunnerProps
                         </button>
                         <h1 className="text-2xl font-bold text-white tracking-tight">{title}</h1>
                     </div>
-                    <div className="text-sm font-medium text-[var(--color-text-muted)] w-[400px] text-right">
+                    <div className="text-sm font-medium text-[var(--color-text-muted)] w-full md:w-[400px] text-center md:text-right">
                         Select a segment to begin. Your progress is saved per segment.
                     </div>
                 </header>
 
-                <main className="flex-1 overflow-y-auto p-8 z-10 scrollbar-hide">
+                <main className="flex-1 overflow-y-auto p-4 md:p-8 z-10 scrollbar-hide">
                     <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {Array.from({ length: totalSegments }).map((_, idx) => {
                             const startQ = idx * SEGMENT_SIZE + 1;
@@ -326,7 +326,7 @@ export default function ExamRunner({ examId, questions, title }: ExamRunnerProps
     return (
         <div className="flex flex-col h-screen overflow-hidden bg-[var(--color-background)] font-sans text-white">
             {/* Top Bar */}
-            <header className="glass-panel rounded-none border-x-0 border-t-0 z-20 px-6 py-4 flex justify-between items-center shadow-md relative border-b border-white/5 bg-[#0f172a]/80 backdrop-blur-md">
+            <header className="glass-panel rounded-none border-x-0 border-t-0 z-20 px-4 md:px-6 py-4 flex flex-col md:flex-row justify-between items-stretch md:items-center gap-4 shadow-md relative border-b border-white/5 bg-[#0f172a]/80 backdrop-blur-md">
                 <div className="flex items-center gap-4">
                     <button onClick={() => setSidebarOpen(!sidebarOpen)} className="md:hidden p-2 hover:bg-white/10 rounded-lg">
                         {sidebarOpen ? <X /> : <Menu />}
@@ -341,7 +341,7 @@ export default function ExamRunner({ examId, questions, title }: ExamRunnerProps
                     </div>
                 </div>
 
-                <div className="flex items-center gap-4 md:gap-6">
+                <div className="flex justify-between items-center gap-4 md:gap-6 w-full md:w-auto">
                     <div className="flex items-center gap-2 text-lg font-mono bg-white/5 border border-white/10 px-4 py-2 rounded-xl text-indigo-400 shadow-inner">
                         <Clock className="w-5 h-5 text-indigo-500" />
                         <span className="font-bold tracking-widest">{formatTime(timeLeft)}</span>
@@ -498,7 +498,7 @@ export default function ExamRunner({ examId, questions, title }: ExamRunnerProps
                                         key={opt}
                                         onClick={() => handleSelect(opt)}
                                         className={clsx(
-                                            "group p-4 rounded-xl border-2 cursor-pointer transition-all flex items-center gap-4 relative overflow-hidden",
+                                            "group p-4 rounded-xl border-2 cursor-pointer transition-all flex flex-col md:flex-row items-start md:items-center gap-4 relative overflow-hidden",
                                             isSelected
                                                 ? "border-indigo-500 bg-indigo-500/10 shadow-lg shadow-indigo-500/10"
                                                 : "border-transparent bg-white/5 shadow-sm hover:border-white/10 hover:bg-white/10"
@@ -526,7 +526,7 @@ export default function ExamRunner({ examId, questions, title }: ExamRunnerProps
                 </main>
 
                 {/* Footer Navigation (Floating) */}
-                <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex items-center gap-4 bg-slate-900/80 backdrop-blur-xl px-6 py-3 rounded-2xl shadow-2xl border border-white/10 z-30">
+                <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex items-center justify-between gap-4 bg-slate-900/80 backdrop-blur-xl px-4 py-3 rounded-2xl shadow-2xl border border-white/10 z-30 w-[95%] md:w-auto">
                     <button
                         onClick={handlePrevious}
                         disabled={currentIdx === currentSegmentStart}

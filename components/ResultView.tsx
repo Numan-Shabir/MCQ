@@ -30,7 +30,7 @@ export default function ResultView({ questions, attempt, examId }: ResultViewPro
     const percentage = Math.round((attempt.score / attempt.total) * 100);
 
     return (
-        <div className="min-h-screen bg-[var(--color-background)] p-8 relative overflow-hidden">
+        <div className="min-h-screen bg-[var(--color-background)] p-4 md:p-8 relative overflow-hidden">
             {/* Background ambiances */}
             <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
                 <div className="absolute top-20 right-20 w-[400px] h-[400px] bg-indigo-600/10 rounded-full blur-[100px]" />
@@ -155,7 +155,7 @@ export default function ResultView({ questions, attempt, examId }: ResultViewPro
                                         if (isSelectedOption && !isCorrectOption) bgClass = "bg-rose-500/20 border-rose-500/30 text-rose-300 font-medium";
 
                                         return (
-                                            <div key={opt} className={clsx("p-4 rounded-xl border text-md flex justify-between items-center transition-colors", bgClass)}>
+                                            <div key={opt} className={clsx("p-4 rounded-xl border text-md flex flex-col md:flex-row justify-between items-start md:items-center gap-2 transition-colors", bgClass)}>
                                                 <span>{opt}</span>
                                                 {isCorrectOption && <span className="ml-2 text-[10px] font-bold uppercase bg-emerald-500/20 text-emerald-300 px-2 py-1 rounded border border-emerald-500/30">Correct Answer</span>}
                                                 {isSelectedOption && !isCorrectOption && <span className="ml-2 text-[10px] font-bold uppercase bg-rose-500/20 text-rose-300 px-2 py-1 rounded border border-rose-500/30">Your Answer</span>}

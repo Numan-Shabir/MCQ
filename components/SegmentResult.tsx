@@ -128,12 +128,33 @@ export default function SegmentResult({ questions, answers, onContinue, score, t
                                         <div className="space-y-3">
                                             {/* Show Selected (Wrong) */}
                                             {selectedKey && (
-                                                <div className="p-3 bg-rose-500/10 border border-rose-500/20 rounded-lg text-rose-300 flex items-center gap-3">
-                                                    <XCircle className="w-5 h-5 shrink-0 text-rose-500" />
-                                                    <span className="font-bold w-6 shrink-0 bg-rose-500/20 text-center rounded">{normalize(selectedKey)}</span>
+                                                <div className="p-3 bg-rose-500/10 border border-rose-500/20 rounded-lg text-rose-300 flex flex-col md:flex-row md:items-center gap-3">
+                                                    <div className="flex items-start md:items-center gap-3 flex-1">
+                                                        <XCircle className="w-5 h-5 shrink-0 text-rose-500 mt-0.5 md:mt-0" />
+                                                        <span className="font-bold w-6 shrink-0 bg-rose-500/20 text-center rounded">{normalize(selectedKey)}</span>
+                                                        <span className="flex-1 opacity-90 whitespace-normal">
+                                                            {(() => {
+                                                                const keys = (selectedKey.includes(',') ? selectedKey.split(',') : selectedKey.split('')).map(k => k.trim());
+                                                                const texts = keys.map(k => {
+                                                                    const opt = options.find(o => o.startsWith(k + ')'));
+                                                                    return opt ? opt.substring(opt.indexOf(')') + 1).replace(/Most Voted/gi, '').replace(/[•.]\s*$/, '').trim() : '';
+                                                                }).filter(Boolean);
+                                                                return texts.length > 0 ? texts.join(', ') : 'Unknown Option';
+                                                            })()}
+                                                        </span>
+                                                    </div>
+                                                    <span className="text-[10px] font-bold uppercase tracking-wider bg-rose-500/20 px-2 py-1 rounded text-rose-200 self-start md:self-auto shrink-0">Your Answer</span>
+                                                </div>
+                                            )}
+
+                                            {/* Show Correct */}
+                                            <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-emerald-300 flex flex-col md:flex-row md:items-center gap-3">
+                                                <div className="flex items-start md:items-center gap-3 flex-1">
+                                                    <CheckCircle className="w-5 h-5 shrink-0 text-emerald-500 mt-0.5 md:mt-0" />
+                                                    <span className="font-bold w-6 shrink-0 bg-emerald-500/20 text-center rounded">{normalize(q.correctAnswer)}</span>
                                                     <span className="flex-1 opacity-90 whitespace-normal">
                                                         {(() => {
-                                                            const keys = (selectedKey.includes(',') ? selectedKey.split(',') : selectedKey.split('')).map(k => k.trim());
+                                                            const keys = (q.correctAnswer.includes(',') ? q.correctAnswer.split(',') : q.correctAnswer.split('')).map(k => k.trim());
                                                             const texts = keys.map(k => {
                                                                 const opt = options.find(o => o.startsWith(k + ')'));
                                                                 return opt ? opt.substring(opt.indexOf(')') + 1).replace(/Most Voted/gi, '').replace(/[•.]\s*$/, '').trim() : '';
@@ -141,25 +162,8 @@ export default function SegmentResult({ questions, answers, onContinue, score, t
                                                             return texts.length > 0 ? texts.join(', ') : 'Unknown Option';
                                                         })()}
                                                     </span>
-                                                    <span className="text-[10px] font-bold uppercase tracking-wider bg-rose-500/20 px-2 py-1 rounded text-rose-200">Your Answer</span>
                                                 </div>
-                                            )}
-
-                                            {/* Show Correct */}
-                                            <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-emerald-300 flex items-center gap-3">
-                                                <CheckCircle className="w-5 h-5 shrink-0 text-emerald-500" />
-                                                <span className="font-bold w-6 shrink-0 bg-emerald-500/20 text-center rounded">{normalize(q.correctAnswer)}</span>
-                                                <span className="flex-1 opacity-90 whitespace-normal">
-                                                    {(() => {
-                                                        const keys = (q.correctAnswer.includes(',') ? q.correctAnswer.split(',') : q.correctAnswer.split('')).map(k => k.trim());
-                                                        const texts = keys.map(k => {
-                                                            const opt = options.find(o => o.startsWith(k + ')'));
-                                                            return opt ? opt.substring(opt.indexOf(')') + 1).replace(/Most Voted/gi, '').replace(/[•.]\s*$/, '').trim() : '';
-                                                        }).filter(Boolean);
-                                                        return texts.length > 0 ? texts.join(', ') : 'Unknown Option';
-                                                    })()}
-                                                </span>
-                                                <span className="text-[10px] font-bold uppercase tracking-wider bg-emerald-500/20 px-2 py-1 rounded text-emerald-200">Correct Answer</span>
+                                                <span className="text-[10px] font-bold uppercase tracking-wider bg-emerald-500/20 px-2 py-1 rounded text-emerald-200 self-start md:self-auto shrink-0">Correct Answer</span>
                                             </div>
                                         </div>
                                     </motion.div>
