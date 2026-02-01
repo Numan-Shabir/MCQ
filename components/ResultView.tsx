@@ -94,9 +94,33 @@ export default function ResultView({ questions, attempt, examId }: ResultViewPro
                     </h2>
 
                     {questions.map((q, idx) => {
-                        const options = JSON.parse(q.options) as string[];
+                        const rawOptions = JSON.parse(q.options);
+                        const options: string[] = [];
+                        if (rawOptions.statement_options && rawOptions.selection_options) {
+                            Object.entries(rawOptions.selection_options).forEach(([key, text]) => {
+                                options.push(`${key}) ${text}`);
+                            });
+                            options.sort();
+                        } else if (Array.isArray(rawOptions)) {
+                            rawOptions.forEach((opt: string) => {
+                                const parts = opt.split(/\s+[•]\s+(?=[A-H][.)]\s)/);
+                                parts.forEach(part => {
+                                    const normalized = part.replace(/^([A-H])\.\s/, '$1) ');
+                                    options.push(normalized);
+                                });
+                            });
+                        } else {
+                            Object.entries(rawOptions).forEach(([key, text]) => {
+                                options.push(`${key}) ${text}`);
+                            });
+                            options.sort();
+                        }
                         const selectedKey = userAnswers[q.id];
-                        const isCorrect = selectedKey && selectedKey.toUpperCase() === q.correctAnswer.toUpperCase();
+                        const normalize = (s: string) => (s || '').replace(/,/g, '').split('').map(c => c.trim().toUpperCase()).sort().join('');
+                        const isCorrect = normalize(selectedKey) === normalize(q.correctAnswer);
+
+                        const selectedKeys = selectedKey ? (selectedKey.includes(',') ? selectedKey.split(',') : selectedKey.split('')).map(k => k.trim().toUpperCase()) : [];
+                        const correctKeys = (q.correctAnswer.includes(',') ? q.correctAnswer.split(',') : q.correctAnswer.split('')).map(k => k.trim().toUpperCase());
 
                         return (
                             <motion.div
@@ -122,9 +146,9 @@ export default function ResultView({ questions, attempt, examId }: ResultViewPro
 
                                 <div className="space-y-3 pl-0 md:pl-12">
                                     {options.map((opt) => {
-                                        const key = opt.split(')')[0].trim();
-                                        const isSelectedOption = selectedKey === key;
-                                        const isCorrectOption = q.correctAnswer.toUpperCase() === key.toUpperCase();
+                                        const key = opt.split(')')[0].trim().toUpperCase();
+                                        const isSelectedOption = selectedKeys.includes(key);
+                                        const isCorrectOption = correctKeys.includes(key);
 
                                         let bgClass = "bg-white/5 border-transparent text-slate-400";
                                         if (isCorrectOption) bgClass = "bg-emerald-500/20 border-emerald-500/30 text-emerald-300 font-medium";

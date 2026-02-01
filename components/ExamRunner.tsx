@@ -62,17 +62,34 @@ export default function ExamRunner({ examId, questions, title }: ExamRunnerProps
 
     // Current Question within the global array
     const currentQuestion = questions[currentIdx];
+    const isMultiSelect = currentQuestion?.text.match(/\(Choose (two|three|four|all).*?\)/i) || currentQuestion?.text.match(/Select (all|two|three|four)/i) || (currentQuestion?.correctAnswer?.length > 1 && !currentQuestion?.correctAnswer?.includes(','));
 
     // Only parse options if we have a valid currentQuestion (safe guard for edge cases)
-    const rawOptions = currentQuestion ? JSON.parse(currentQuestion.options) as string[] : [];
+    const rawOptions = currentQuestion ? JSON.parse(currentQuestion.options) : [];
     const options: string[] = [];
-    rawOptions.forEach(opt => {
-        const parts = opt.split(/\s+[•]\s+(?=[A-H][.)]\s)/);
-        parts.forEach(part => {
-            const normalized = part.replace(/^([A-H])\.\s/, '$1) ');
-            options.push(normalized);
+    let statements: Record<string, string> | null = null;
+
+    if (rawOptions.statement_options && rawOptions.selection_options) {
+        statements = rawOptions.statement_options;
+        Object.entries(rawOptions.selection_options).forEach(([key, text]) => {
+            options.push(`${key}) ${text}`);
         });
-    });
+        options.sort();
+    } else if (Array.isArray(rawOptions)) {
+        rawOptions.forEach((opt: string) => {
+            const parts = opt.split(/\s+[•]\s+(?=[A-H][.)]\s)/);
+            parts.forEach((part: string) => {
+                const normalized = part.replace(/^([A-H])\.\s/, '$1) ');
+                options.push(normalized);
+            });
+        });
+    } else {
+        // Handle Object format { A: "Text", B: "Text" }
+        Object.entries(rawOptions).forEach(([key, text]) => {
+            options.push(`${key}) ${text}`);
+        });
+        options.sort(); // Ensure A, B, C order
+    }
 
     useEffect(() => {
         if (!hasStarted) return; // Don't run timer if not started
@@ -100,7 +117,25 @@ export default function ExamRunner({ examId, questions, title }: ExamRunnerProps
 
     const handleSelect = (option: string) => {
         const key = option.split(')')[0].trim();
-        setAnswers((prev) => ({ ...prev, [currentQuestion.id]: key }));
+        const currentAns = answers[currentQuestion.id] || '';
+
+        if (isMultiSelect) {
+            let newAns: string[];
+            if (currentAns) {
+                const parts = currentAns.split(',');
+                if (parts.includes(key)) {
+                    newAns = parts.filter(p => p !== key);
+                } else {
+                    newAns = [...parts, key];
+                }
+            } else {
+                newAns = [key];
+            }
+            // Sort to ensure consistency
+            setAnswers((prev) => ({ ...prev, [currentQuestion.id]: newAns.sort().join(',') }));
+        } else {
+            setAnswers((prev) => ({ ...prev, [currentQuestion.id]: key }));
+        }
     };
 
     const toggleMark = () => {
@@ -192,8 +227,16 @@ export default function ExamRunner({ examId, questions, title }: ExamRunnerProps
         let score = 0;
         currentSegmentQuestions.forEach(q => {
             const selected = answers[q.id];
-            if (selected && selected.toUpperCase() === q.correctAnswer.toUpperCase()) {
-                score++;
+            if (selected) {
+                const normalize = (s: string) => (s || '').replace(/,/g, '').split('').map(c => c.trim().toUpperCase()).sort().join('');
+
+                // Normalize correct answer
+                // If correctAnswer is "AD", split chars. If "A,D", split comma.
+                let correct = q.correctAnswer || "";
+
+                if (normalize(selected) === normalize(correct)) {
+                    score++;
+                }
             }
         });
         return score;
@@ -429,11 +472,24 @@ export default function ExamRunner({ examId, questions, title }: ExamRunnerProps
                             </p>
                         </div>
 
+                        {/* Statements (if applicable) */}
+                        {statements && (
+                            <div className="mb-6 space-y-2">
+                                {Object.entries(statements).map(([key, text]) => (
+                                    <div key={key} className="p-3 bg-white/5 rounded-lg border border-white/5 text-slate-300 flex overflow-hidden">
+                                        <span className="font-bold text-indigo-400 mr-3 uppercase shrink-0 bg-indigo-500/10 px-2 rounded h-fit">{key}</span>
+                                        <span className="text-sm md:text-base">{text as string}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+
                         {/* Options */}
                         <div className="grid gap-3">
                             {options.map((opt) => {
                                 const key = opt.split(')')[0].trim();
-                                const isSelected = answers[currentQuestion.id] === key;
+                                const currentAns = answers[currentQuestion.id] || '';
+                                const isSelected = currentAns.split(',').includes(key);
 
                                 return (
                                     <motion.div

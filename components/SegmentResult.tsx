@@ -21,14 +21,15 @@ interface SegmentResultProps {
 }
 
 export default function SegmentResult({ questions, answers, onContinue, score, total }: SegmentResultProps) {
+    const normalize = (s: string) => (s || '').replace(/,/g, '').split('').map(c => c.trim().toUpperCase()).sort().join('');
     const percentage = Math.round((score / total) * 100);
     const wrongAnswers = questions.filter(q => {
         const selected = answers[q.id];
-        return !selected || selected.toUpperCase() !== q.correctAnswer.toUpperCase();
+        return !selected || normalize(selected) !== normalize(q.correctAnswer);
     });
 
     return (
-        <div className="min-h-screen bg-[var(--color-background)] p-4 md:p-8 flex items-center justify-center relative overflow-hidden">
+        <div className="min-h-screen bg-[var(--color-background)] p-4 md:p-8 flex flex-col items-center justify-center relative overflow-x-hidden">
             {/* Background ambiances */}
             <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-indigo-600/20 rounded-full blur-[120px]" />
@@ -80,22 +81,35 @@ export default function SegmentResult({ questions, answers, onContinue, score, t
                         transition={{ delay: 0.2 }}
                         className="space-y-4"
                     >
-                        <h3 className="text-xl font-bold text-white flex items-center gap-2 pl-2">
+                        <h3 className="text-xl font-bold text-white flex items-center justify-center gap-2">
                             <AlertTriangle className="text-amber-400" />
                             Review Mistakes ({wrongAnswers.length})
                         </h3>
 
                         <div className="grid gap-4">
                             {wrongAnswers.map((q, idx) => {
-                                const rawOptions = JSON.parse(q.options) as string[];
+                                const rawOptions = JSON.parse(q.options);
                                 const options: string[] = [];
-                                rawOptions.forEach(opt => {
-                                    const parts = opt.split(/\s+[•]\s+(?=[A-H][.)]\s)/);
-                                    parts.forEach(part => {
-                                        const normalized = part.replace(/^([A-H])\.\s/, '$1) ');
-                                        options.push(normalized);
+
+                                if (rawOptions.statement_options && rawOptions.selection_options) {
+                                    Object.entries(rawOptions.selection_options).forEach(([key, text]) => {
+                                        options.push(`${key}) ${text}`);
                                     });
-                                });
+                                    options.sort();
+                                } else if (Array.isArray(rawOptions)) {
+                                    rawOptions.forEach((opt: string) => {
+                                        const parts = opt.split(/\s+[•]\s+(?=[A-H][.)]\s)/);
+                                        parts.forEach(part => {
+                                            const normalized = part.replace(/^([A-H])\.\s/, '$1) ');
+                                            options.push(normalized);
+                                        });
+                                    });
+                                } else {
+                                    Object.entries(rawOptions).forEach(([key, text]) => {
+                                        options.push(`${key}) ${text}`);
+                                    });
+                                    options.sort();
+                                }
                                 const selectedKey = answers[q.id];
 
                                 return (
@@ -111,14 +125,21 @@ export default function SegmentResult({ questions, answers, onContinue, score, t
                                             <p className="font-medium text-lg text-slate-200">{q.text}</p>
                                         </div>
 
-                                        <div className="pl-0 md:pl-10 space-y-3">
+                                        <div className="space-y-3">
                                             {/* Show Selected (Wrong) */}
                                             {selectedKey && (
                                                 <div className="p-3 bg-rose-500/10 border border-rose-500/20 rounded-lg text-rose-300 flex items-center gap-3">
                                                     <XCircle className="w-5 h-5 shrink-0 text-rose-500" />
-                                                    <span className="font-bold w-6 shrink-0 bg-rose-500/20 text-center rounded">{selectedKey}</span>
-                                                    <span className="truncate flex-1 opacity-90">
-                                                        {options.find(o => o.startsWith(selectedKey))?.split(')')[1].replace(/Most Voted/gi, '').replace(/[•.]\s*$/, '').trim() || 'Unknown Option'}
+                                                    <span className="font-bold w-6 shrink-0 bg-rose-500/20 text-center rounded">{normalize(selectedKey)}</span>
+                                                    <span className="flex-1 opacity-90 whitespace-normal">
+                                                        {(() => {
+                                                            const keys = (selectedKey.includes(',') ? selectedKey.split(',') : selectedKey.split('')).map(k => k.trim());
+                                                            const texts = keys.map(k => {
+                                                                const opt = options.find(o => o.startsWith(k + ')'));
+                                                                return opt ? opt.substring(opt.indexOf(')') + 1).replace(/Most Voted/gi, '').replace(/[•.]\s*$/, '').trim() : '';
+                                                            }).filter(Boolean);
+                                                            return texts.length > 0 ? texts.join(', ') : 'Unknown Option';
+                                                        })()}
                                                     </span>
                                                     <span className="text-[10px] font-bold uppercase tracking-wider bg-rose-500/20 px-2 py-1 rounded text-rose-200">Your Answer</span>
                                                 </div>
@@ -127,9 +148,16 @@ export default function SegmentResult({ questions, answers, onContinue, score, t
                                             {/* Show Correct */}
                                             <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-emerald-300 flex items-center gap-3">
                                                 <CheckCircle className="w-5 h-5 shrink-0 text-emerald-500" />
-                                                <span className="font-bold w-6 shrink-0 bg-emerald-500/20 text-center rounded">{q.correctAnswer}</span>
-                                                <span className="truncate flex-1 opacity-90">
-                                                    {options.find(o => o.startsWith(q.correctAnswer))?.split(')')[1].replace(/Most Voted/gi, '').replace(/[•.]\s*$/, '').trim() || 'Unknown Option'}
+                                                <span className="font-bold w-6 shrink-0 bg-emerald-500/20 text-center rounded">{normalize(q.correctAnswer)}</span>
+                                                <span className="flex-1 opacity-90 whitespace-normal">
+                                                    {(() => {
+                                                        const keys = (q.correctAnswer.includes(',') ? q.correctAnswer.split(',') : q.correctAnswer.split('')).map(k => k.trim());
+                                                        const texts = keys.map(k => {
+                                                            const opt = options.find(o => o.startsWith(k + ')'));
+                                                            return opt ? opt.substring(opt.indexOf(')') + 1).replace(/Most Voted/gi, '').replace(/[•.]\s*$/, '').trim() : '';
+                                                        }).filter(Boolean);
+                                                        return texts.length > 0 ? texts.join(', ') : 'Unknown Option';
+                                                    })()}
                                                 </span>
                                                 <span className="text-[10px] font-bold uppercase tracking-wider bg-emerald-500/20 px-2 py-1 rounded text-emerald-200">Correct Answer</span>
                                             </div>

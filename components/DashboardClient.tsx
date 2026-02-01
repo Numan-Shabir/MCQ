@@ -4,7 +4,8 @@ import { Suspense, useState } from 'react';
 import Link from 'next/link';
 import FileUpload from '@/components/FileUpload';
 import { motion } from 'framer-motion';
-import { LogOut, BookOpen, Clock, Activity, Shield, Atom, PlayCircle } from 'lucide-react';
+import { LogOut, BookOpen, Clock, Activity, Shield, Atom, PlayCircle, Trash2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 interface DashboardClientProps {
     session: any;
@@ -14,6 +15,31 @@ interface DashboardClientProps {
 
 export default function DashboardClient({ session, exams, isAdmin }: DashboardClientProps) {
     const [hoveredExam, setHoveredExam] = useState<string | null>(null);
+    const [isDeleting, setIsDeleting] = useState<string | null>(null);
+    const router = useRouter();
+
+    const handleDelete = async (e: React.MouseEvent, examId: string) => {
+        e.preventDefault(); // Prevent navigation
+        if (!confirm('Are you sure you want to delete this exam? This action cannot be undone.')) return;
+
+        setIsDeleting(examId);
+        try {
+            const res = await fetch(`/api/exam/${examId}`, {
+                method: 'DELETE',
+            });
+
+            if (res.ok) {
+                router.refresh();
+            } else {
+                alert('Failed to delete exam');
+            }
+        } catch (error) {
+            console.error('Error deleting exam:', error);
+            alert('An error occurred');
+        } finally {
+            setIsDeleting(null);
+        }
+    };
 
     const container = {
         hidden: { opacity: 0 },
@@ -143,6 +169,19 @@ export default function DashboardClient({ session, exams, isAdmin }: DashboardCl
                                             <PlayCircle className="w-4 h-4" />
                                             <span>{exam._count.questions} Questions</span>
                                         </div>
+                                        {isAdmin && (
+                                            <button
+                                                onClick={(e) => handleDelete(e, exam.id)}
+                                                disabled={isDeleting === exam.id}
+                                                className="ml-auto text-rose-400 hover:text-rose-300 p-2 hover:bg-rose-500/20 rounded-lg transition-colors z-10"
+                                            >
+                                                {isDeleting === exam.id ? (
+                                                    <span className="text-xs">Deleting...</span>
+                                                ) : (
+                                                    <Trash2 className="w-4 h-4" />
+                                                )}
+                                            </button>
+                                        )}
                                     </div>
 
                                     <Link

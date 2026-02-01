@@ -1,0 +1,480 @@
+[
+    {
+        "question_number": 151,
+        "question": "What are the features of Flow Designer? (Choose three.)",
+        "options": {
+            "A": "Add stages to a flow.",
+            "B": "Call a flow from another flow.",
+            "C": "Test a flow using the 'Run as' feature.",
+            "D": "Support Java Scripting for triggers.",
+            "E": "Run a flow from a Catalog item.",
+            "F": "Client-side validation."
+        },
+        "answer": "ACE"
+    },
+    {
+        "question_number": 152,
+        "question": "How is access to Application Menus and Modules controlled?",
+        "options": {
+            "A": "Access Control",
+            "B": "Client Scripts",
+            "C": "Roles",
+            "D": "Application Rules"
+        },
+        "answer": "C"
+    },
+    {
+        "question_number": 153,
+        "question": "What is the ServiceNow App Repository?",
+        "options": {
+            "A": "A Request table",
+            "B": "A database containing ServiceNow apps",
+            "C": "A collection of files in Git",
+            "D": "Another name for update sets"
+        },
+        "answer": "B"
+    },
+    {
+        "question_number": 154,
+        "question": "What happens to the List view when a new field is added to an existing table?",
+        "options": {
+            "A": "Field added at start",
+            "B": "Field added at end",
+            "C": "The new field is not added to the List view",
+            "D": "A List View is created with the new field"
+        },
+        "answer": "C"
+    },
+    {
+        "question_number": 155,
+        "question": "ExportItem table extends Item table (ItemName, ItemQty) with ItemCountry. Which fields are in ExportItem?",
+        "options": {
+            "A": "Only ItemCountry",
+            "B": "ItemName, ItemQty, and ItemCountry",
+            "C": "ItemCountry, Number",
+            "D": "Only ItemName, ItemQty"
+        },
+        "answer": "B"
+    },
+    {
+        "question_number": 156,
+        "question": "What data types of Flow Variables are supported to store record data? (Choose three.)",
+        "options": {
+            "A": "Choice",
+            "B": "Date",
+            "C": "Array",
+            "D": "Integer",
+            "E": "String"
+        },
+        "answer": "BDE"
+    },
+    {
+        "question_number": 157,
+        "question": "Which of the following objects does a Before Business Rule have access to in a script?",
+        "options": {
+            "A": "current",
+            "B": "previous",
+            "C": "GlideRecord",
+            "D": "All of the above"
+        },
+        "answer": "D"
+    },
+    {
+        "question_number": 158,
+        "question": "Which options are strategies for debugging client-side scripts? (Choose two.)",
+        "options": {
+            "A": "g_form.addInfoMessage()",
+            "B": "gs.addErrorMessage()",
+            "C": "gs.log()",
+            "D": "jslog()"
+        },
+        "answer": "AD"
+    },
+    {
+        "question_number": 159,
+        "question": "In a privately-scoped application, which methods are used for logging messages in server-side scripts? (Choose two.)",
+        "options": {
+            "A": "gs.logError()",
+            "B": "gs.log()",
+            "C": "gs.debug()",
+            "D": "gs.info()",
+            "E": "gs.error()"
+        },
+        "answer": "CD"
+    },
+    {
+        "question_number": 160,
+        "question": "When creating an application through the Guided Application Creator, what are the options for creating a table? (Choose three.)",
+        "options": {
+            "A": "Run import jobs",
+            "B": "Use API calls",
+            "C": "Create a table from a template",
+            "D": "Create a table from scratch",
+            "E": "Link to external tables",
+            "F": "Extend a table",
+            "G": "Upload a spreadsheet"
+        },
+        "answer": "DFG"
+    },
+    {
+        "question_number": 161,
+        "question": "Which one of the following database operations can be controlled with Application Access? (Choose two.)",
+        "options": {
+            "A": "Query",
+            "B": "Update",
+            "C": "Create",
+            "D": "Delete"
+        },
+        "answer": "BC"
+    },
+    {
+        "question_number": 162,
+        "question": "Which is an example of when an application might use a Scheduled Script Execution (Scheduled Job)?",
+        "options": {
+            "A": "Run client-side script daily",
+            "B": "Query the database every day to look for unassigned records.",
+            "C": "Display welcome message",
+            "D": "Validate form input"
+        },
+        "answer": "B"
+    },
+    {
+        "question_number": 163,
+        "question": "What field type would you select if you want to query records from another table on a form?",
+        "options": {
+            "A": "Date",
+            "B": "Phone Number",
+            "C": "String",
+            "D": "Reference"
+        },
+        "answer": "D"
+    },
+    {
+        "question_number": 164,
+        "question": "What functionality is supported by Flow Designer?",
+        "options": {
+            "A": "flow_operator can create flows",
+            "B": "Run as security admin",
+            "C": "Call a subflow from a flow.",
+            "D": "Trigger off record delete"
+        },
+        "answer": "C"
+    },
+    {
+        "question_number": 165,
+        "question": "What is a characteristic of Modules?",
+        "options": {
+            "A": "Must be associated with a table",
+            "B": "Access not controlled with roles",
+            "C": "Every Module must be part of an Application Menu.",
+            "D": "Cannot open forms/lists"
+        },
+        "answer": "C"
+    },
+    {
+        "question_number": 166,
+        "question": "Which method can be used to install an application on a ServiceNow instance? (Choose three.)",
+        "options": {
+            "A": "Google Play Store",
+            "B": "Stack Overflow",
+            "C": "ServiceNow Store",
+            "D": "Install button on application record",
+            "E": "Application Repository",
+            "F": "Import from XML file"
+        },
+        "answer": "CEF"
+    },
+    {
+        "question_number": 167,
+        "question": "Which is the correct Link Type for a module opening a Record Producer UI?",
+        "options": {
+            "A": "URL (from Arguments:)",
+            "B": "Content Page",
+            "C": "Script (from Arguments:)",
+            "D": "HTML (from Arguments:)"
+        },
+        "answer": "A"
+    },
+    {
+        "question_number": 168,
+        "question": "What is the most common role that has access to almost all platform features?",
+        "options": {
+            "A": "Security Admin",
+            "B": "Sys Admin",
+            "C": "Admin [sn_admin]",
+            "D": "System Administrator [admin]"
+        },
+        "answer": "D"
+    },
+    {
+        "question_number": 169,
+        "question": "Which items are valid UI Action types in ServiceNow? (Choose three.)",
+        "options": {
+            "A": "List banner button",
+            "B": "Form button",
+            "C": "Record navigation button",
+            "D": "List choice",
+            "E": "Form choice",
+            "F": "Workflow action"
+        },
+        "answer": "ABD"
+    },
+    {
+        "question_number": 170,
+        "question": "What occurs when an existing table is extended in ServiceNow?",
+        "options": {
+            "A": "Parent ACLs ignored",
+            "B": "Does not inherit fields",
+            "C": "Must script all behaviors",
+            "D": "The new table inherits the functionality built into the parent table."
+        },
+        "answer": "D"
+    },
+    {
+        "question_number": 171,
+        "question": "App 'My App' table 'MyAppTable' (Can delete: Not selected, Allow configuration: Selected). Which is true?",
+        "options": {
+            "A": "Other scoped app developer can write Business Rule to delete records",
+            "B": "Developer in the My App scope can write a Business Rule to successfully delete records",
+            "C": "Any developer can write a Business Rule to delete records",
+            "D": "No Business Rule can be written to delete records"
+        },
+        "answer": "B",
+        "explanation": "Application Access (Can Delete) restricts other scopes. Artifacts within the same scope are not restricted by Application Access settings."
+    },
+    {
+        "question_number": 172,
+        "question": "Which one of the following is true about client-side scripted security?",
+        "options": {
+            "A": "Client-side scripts have access to the GlideUser (g_user) methods",
+            "B": "No access to user methods",
+            "C": "Access to GlideSystem (gs) methods",
+            "D": "Access to both gs and g_user"
+        },
+        "answer": "A"
+    },
+    {
+        "question_number": 173,
+        "question": "How can Administrators expand the list of supported file types for code search in ServiceNow Studio?",
+        "options": {
+            "A": "Modify default code search table",
+            "B": "Configure metadata sync",
+            "C": "Create a new code search group",
+            "D": "By adding new file types to a custom search group"
+        },
+        "answer": "D"
+    },
+    {
+        "question_number": 174,
+        "question": "What happens if a record producer script aborts the record generation process?",
+        "options": {
+            "A": "Record creation displays an error message to the user",
+            "B": "Record not generated in Item Produced Record table",
+            "C": "Redirected to confirmation page",
+            "D": "Terminates without notifying user"
+        },
+        "answer": "A"
+    },
+    {
+        "question_number": 175,
+        "question": "What is a function of an update set in ServiceNow Studio?",
+        "options": {
+            "A": "Track performance",
+            "B": "Create new apps",
+            "C": "Manage production configs",
+            "D": "To group configuration changes for transfer between instances"
+        },
+        "answer": "D"
+    },
+    {
+        "question_number": 176,
+        "question": "How can an application respond to an Event triggered by gs.eventQueue()? (Choose two.)",
+        "options": {
+            "A": "Client Script",
+            "B": "UI Policy",
+            "C": "Script Action",
+            "D": "Scheduled Script Execution",
+            "E": "Email Notification"
+        },
+        "answer": "CE"
+    },
+    {
+        "question_number": 177,
+        "question": "What is a scoped application that contains Flow Designer actions tailored for a specific application?",
+        "options": {
+            "A": "Bundle",
+            "B": "Flow",
+            "C": "Spoke",
+            "D": "Action"
+        },
+        "answer": "C"
+    },
+    {
+        "question_number": 178,
+        "question": "What is a reason for building a custom application? (Choose two.)",
+        "options": {
+            "A": "To avoid repository",
+            "B": "Replace base tables",
+            "C": "To create a custom integration for a 3rd party system",
+            "D": "To fulfill a specific use case on internal processes"
+        },
+        "answer": "CD"
+    },
+    {
+        "question_number": 179,
+        "question": "What can a developer do with REST API Explorer? (Choose two.)",
+        "options": {
+            "A": "Practice public data providers",
+            "B": "Convert functions to methods",
+            "C": "Find web resources",
+            "D": "Create sample code for sending REST requests to ServiceNow",
+            "E": "Test API endpoints on ServiceNow"
+        },
+        "answer": "DE"
+    },
+    {
+        "question_number": 180,
+        "question": "Which table stores details of customizations included in an update set?",
+        "options": {
+            "A": "Customer Update [sys_update_xml]",
+            "B": "System Properties [sys_properties]",
+            "C": "Application Registry [sys_app]",
+            "D": "Update Set [sys_update_set]"
+        },
+        "answer": "A"
+    },
+    {
+        "question_number": 181,
+        "question": "What is the default module name when a new application table is created?",
+        "options": {
+            "A": "'X_' prefix",
+            "B": "Plural form of the application name",
+            "C": "Same name as application",
+            "D": "'U_' prefix"
+        },
+        "answer": "B"
+    },
+    {
+        "question_number": 182,
+        "question": "Which feature can be used to add instructions to a form?",
+        "options": {
+            "A": "Context Menu UI Action",
+            "B": "Annotations for form instructions",
+            "C": "Related links",
+            "D": "Populated read-only field"
+        },
+        "answer": "B"
+    },
+    {
+        "question_number": 183,
+        "question": "What is displayed to delegated developers to package changes for deployment in ServiceNow Studio?",
+        "options": {
+            "A": "Tools tab",
+            "B": "Export to XML",
+            "C": "Publish Button",
+            "D": "Update Set Picker"
+        },
+        "answer": "D"
+    },
+    {
+        "question_number": 184,
+        "question": "What does Application Scoping provide? (Choose two.)",
+        "options": {
+            "A": "Track users",
+            "B": "A namespace (prefix and scope name) to prevent name collisions.",
+            "C": "Control role views",
+            "D": "A means to control how scripts from other scopes can alter tables."
+        },
+        "answer": "BD"
+    },
+    {
+        "question_number": 185,
+        "question": "Why are application files important? (Choose two.)",
+        "options": {
+            "A": "Store user credentials",
+            "B": "They define the app logic and behavior.",
+            "C": "They restrict access to the application.",
+            "D": "Monitor performance"
+        },
+        "answer": "BC"
+    },
+    {
+        "question_number": 186,
+        "question": "What happens when an existing table is extended? (Choose two.)",
+        "options": {
+            "A": "Newly script all behavior",
+            "B": "Select specific fields to inherit",
+            "C": "Parent table Access Controls are evaluated.",
+            "D": "Inherit parent functionality",
+            "E": "The new table inherits all the fields from the parent table.",
+            "F": "Dictionary entries include records for parent fields"
+        },
+        "answer": "CE"
+    },
+    {
+        "question_number": 187,
+        "question": "When can the value 'Protected' be leveraged in a Protection Policy for a Script Include?",
+        "options": {
+            "A": "Admin enables it",
+            "B": "glide.app.apply_protection is True",
+            "C": "The application is downloaded from the ServiceNow App Store",
+            "D": "protected_edit role edits it"
+        },
+        "answer": "C"
+    },
+    {
+        "question_number": 188,
+        "question": "When configuring a REST Message, what syntax indicates passing a variable during a function call?",
+        "options": {
+            "A": "${variable_name}",
+            "B": "<variable_name>",
+            "C": "current.variable_name",
+            "D": "<variable_name>.do?WSDL"
+        },
+        "answer": "A"
+    },
+    {
+        "question_number": 189,
+        "question": "What does the 'Read-only' protection policy for Script Includes allow?",
+        "options": {
+            "A": "Customize Script Include",
+            "B": "Only admins can delete",
+            "C": "Application developers can view the script logic but not change it.",
+            "D": "Only admins can edit"
+        },
+        "answer": "C"
+    },
+    {
+        "question_number": 190,
+        "question": "Which Client-side scoped API class can be used as a replacement for GlideRecord?",
+        "options": {
+            "A": "GlideElement",
+            "B": "GlideDialogWindow",
+            "C": "GlideAjax",
+            "D": "GlideForm"
+        },
+        "answer": "C"
+    },
+    {
+        "question_number": 191,
+        "question": "What Link type creates a module that opens a Record Producer UI instead of a Form UI?",
+        "options": {
+            "A": "URL (from Arguments:)",
+            "B": "Content Page",
+            "C": "Script (from Arguments:)",
+            "D": "HTML (from Arguments:)"
+        },
+        "answer": "A"
+    },
+    {
+        "question_number": 192,
+        "question": "An app developer wants to review the scripts, reports, and other application artifacts included in a published app. What steps are taken?",
+        "options": {
+            "A": "Global search",
+            "B": "Update Sets list",
+            "C": "Examine the Application Files Related List in the application to be published",
+            "D": "Open artifact records individually"
+        },
+        "answer": "C"
+    }
+]
