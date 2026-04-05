@@ -385,9 +385,17 @@ export default function ExamRunner({ examId, questions, title }: ExamRunnerProps
             </header>
 
             <div className="flex flex-1 overflow-hidden relative">
+                {/* Mobile Overlay */}
+                {sidebarOpen && (
+                    <div 
+                        className="absolute inset-0 bg-black/60 z-30 md:hidden backdrop-blur-sm" 
+                        onClick={() => setSidebarOpen(false)} 
+                    />
+                )}
+
                 {/* Sidebar Navigation */}
                 <aside className={clsx(
-                    "absolute md:relative z-10 w-72 h-full bg-[#1e293b]/90 backdrop-blur-xl border-r border-white/5 transform transition-transform duration-300 md:translate-x-0 flex flex-col shadow-2xl",
+                    "absolute top-0 left-0 md:relative z-40 md:z-10 w-72 h-full bg-[#1e293b]/95 backdrop-blur-xl border-r border-white/5 transform transition-transform duration-300 md:translate-x-0 flex flex-col shadow-2xl",
                     sidebarOpen ? "translate-x-0" : "-translate-x-full"
                 )}>
                     <div className="p-4 border-b border-white/5">

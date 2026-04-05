@@ -134,6 +134,29 @@ async function main() {
         }
         console.log(`Finished processing questions for ${exam2.title}`);
     }
+
+    // Seed CAD set 3
+    const exam3 = await upsertExam('CAD set 3', 'Practice Exam Set 3 for CAD Certification');
+
+    const set3ChunkFiles = ['questions_cad_set_3_chunk_1.json', 'questions_cad_set_3_chunk_2.json', 'questions_cad_set_3_chunk_3.json', 'questions_cad_set_3_chunk_4.json', 'questions_cad_set_3_chunk_5.json'];
+    let allQuestionsSet3: any[] = [];
+
+    for (const file of set3ChunkFiles) {
+        const filePath = path.join(__dirname, file);
+        if (fs.existsSync(filePath)) {
+            const content = fs.readFileSync(filePath, 'utf-8');
+            const questions = JSON.parse(content);
+            allQuestionsSet3 = [...allQuestionsSet3, ...questions];
+        }
+    }
+
+    if (allQuestionsSet3.length > 0) {
+        console.log(`Processing ${allQuestionsSet3.length} questions for exam: ${exam3.title}...`);
+        for (const q of allQuestionsSet3) {
+            await upsertQuestion(exam3.id, q);
+        }
+        console.log(`Finished processing questions for ${exam3.title}`);
+    }
 }
 
 main()
